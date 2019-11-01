@@ -1,3 +1,4 @@
+# coding=utf-8
 from tkinter import *
 
 class Application(Frame):
@@ -89,7 +90,7 @@ class Application(Frame):
 
     def search(self):
         """ Search phrase in the dictionary using options"""
-        dictionary = open("dictionary.txt", "r", encoding = 'utf-8')
+        dictionary = open("dictionary_ua.txt", "r", encoding = 'utf-8')
         
         # preparation for search
         in_phrase = self.search_area.get()
