@@ -1,5 +1,8 @@
 # coding=utf-8
-from tkinter import *
+from tkinter import Frame, Entry, Button, W, BooleanVar, Checkbutton, Label, \
+                    Text, WORD, S, END, Tk
+from datetime import datetime
+
 
 class Application(Frame):
     """ Create GUI for dictionary """
@@ -63,7 +66,7 @@ class Application(Frame):
 
         # copyright
         Label(self,
-              text = "Copyright © 2017, Misha Kushka,"
+              text = "Copyright © " + str(datetime.today().year) + ", Misha Kushka,"
               ).grid(row = 9, column = 1, columnspan = 2, sticky = S)
         Label(self,
               text = "All Rights Reserved"
