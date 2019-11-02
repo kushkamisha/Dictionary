@@ -1,6 +1,6 @@
 # coding=utf-8
 from tkinter import Frame, Entry, Button, W, BooleanVar, Checkbutton, Label, \
-                    Text, WORD, S, END, Tk
+    Text, WORD, S, END, Tk, OptionMenu, StringVar
 from datetime import datetime
 
 
@@ -9,8 +9,12 @@ class Application(Frame):
     def __init__(self, master):
         super(Application, self).__init__(master)
         self.grid(padx = 5, pady = 5)
-        self.create_widgets()
         self.VOWELS = ['а', 'е', 'є', 'и', 'і', 'ї', 'о', 'у', 'ю', 'я']
+        self.DICTIONARIES = ["Інверсійний словник української мови",
+                             "Орфографический словарь В.В. Лопатина"]
+        self.DICT_FILES = ["data/processed/dictionary_ua.txt",
+                           "data/processed/Lopatin.txt"]
+        self.create_widgets()
 
     def create_widgets(self):
         """ Create all widgets for application """
@@ -23,6 +27,7 @@ class Application(Frame):
                text = "Пошук",
                command = self.search
                ).grid(row = 0, column = 2, sticky = W)
+
         # (1) check button only end of word
         self.at_end = BooleanVar()
         Checkbutton(self,
@@ -64,6 +69,12 @@ class Application(Frame):
         self.vowels = Entry(self, width = 4)
         self.vowels.grid(row = 5, column = 2, sticky = W)
 
+        self.optionmenu_value = StringVar(self)
+        self.optionmenu_value.set(self.DICTIONARIES[0])  # default value
+        self.optionmenu = OptionMenu(
+            self, self.optionmenu_value, *self.DICTIONARIES)
+        self.optionmenu.grid(row=6, column=1, columnspan=2)
+
         # copyright
         Label(self,
               text = "Copyright © " + str(datetime.today().year) + ", Misha Kushka,"
@@ -93,7 +104,8 @@ class Application(Frame):
 
     def search(self):
         """ Search phrase in the dictionary using options"""
-        dictionary = open("data/processed/dictionary_ua.txt", "r", encoding = 'utf-8')
+        index = self.DICTIONARIES.index(self.optionmenu_value.get())
+        dictionary = open(self.DICT_FILES[index], "r", encoding = 'utf-8')
         
         # preparation for search
         in_phrase = self.search_area.get()
@@ -181,7 +193,7 @@ class Application(Frame):
 
 def main():
     root = Tk()
-    root.title("Інверсійний словник української мови")
+    root.title("Інверсійний словник")
     Application(root)
     root.mainloop()
 
