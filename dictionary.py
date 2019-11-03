@@ -1,6 +1,6 @@
 # coding=utf-8
-from tkinter import Frame, Entry, Button, W, BooleanVar, Checkbutton, Label, \
-    Text, WORD, S, END, Tk, OptionMenu, StringVar
+from tkinter import Frame, Entry, Button, W, E, BooleanVar, Checkbutton, \
+    Label, Text, WORD, END, Tk, OptionMenu, StringVar
 from datetime import datetime
 
 
@@ -9,9 +9,11 @@ class Application(Frame):
     def __init__(self, master):
         super(Application, self).__init__(master)
         self.grid(padx = 5, pady = 5)
-        self.VOWELS = ['а', 'е', 'є', 'и', 'і', 'ї', 'о', 'у', 'ю', 'я']
-        self.DICTIONARIES = ["Інверсійний словник української мови",
-                             "Орфографический словарь В.В. Лопатина"]
+        self.VOWELS = [
+            'а', 'е', 'є', 'и', 'і', 'ї', 'о', 'у', 'ю', 'я', 'ы', 'ё', 'э',
+            'А', 'Е', 'Є', 'И', 'І', 'Ї', 'О', 'У', 'Ю', 'Я', 'Ы', 'Ё', 'Э']
+        self.DICTIONARIES = ["Українська мова",
+                             "Русский язык"]
         self.DICT_FILES = ["data/processed/dictionary_ua.txt",
                            "data/processed/Lopatin.txt"]
         self.create_widgets()
@@ -19,20 +21,25 @@ class Application(Frame):
     def create_widgets(self):
         """ Create all widgets for application """
         # search area
-        self.search_area = Entry(self, width = 42)
+        self.search_area = Entry(self, width = 45)
         self.search_area.grid(row = 0, column = 1, sticky = W, padx = 10)
+
+        Button(self,
+               text="а́",
+               command = self.add_stress
+               ).grid(row=0, column=2, sticky=W)
 
         # search button
         Button(self,
                text = "Пошук",
                command = self.search
-               ).grid(row = 0, column = 2, sticky = W)
+               ).grid(row = 0, column = 3, sticky = W)
 
         # (1) check button only end of word
         self.at_end = BooleanVar()
         Checkbutton(self,
                     text = "шукати лише наприкінці слова",
-                    variable = self.at_end
+                    variable = self.at_end,
                     ).grid(row = 1, column = 1, sticky = W, padx = 5)
 
         # (2) check button and text area number of syllables
@@ -42,7 +49,7 @@ class Application(Frame):
                     variable = self.syllables
                     ).grid(row = 2, column = 1, sticky = W, padx = 5)
         self.numb_of_syllables = Entry(self, width = 2)
-        self.numb_of_syllables.grid(row = 2, column = 2, sticky = W)
+        self.numb_of_syllables.grid(row = 2, column = 3, sticky = W)
 
         # (3) check button only consonants after phrase
         self.consonants = BooleanVar()
@@ -54,11 +61,11 @@ class Application(Frame):
         # (4) check button and text area on what phrase ends
         self.phrase = BooleanVar()
         Checkbutton(self,
-                    text = " слово закінчується на буквосполучення",
+                    text = "слово закінчується на буквосполучення",
                     variable = self.phrase
                     ).grid(row = 4, column = 1, sticky = W, padx = 5)
         self.in_phrase = Entry(self, width = 4)
-        self.in_phrase.grid(row = 4, column = 2, sticky = W)
+        self.in_phrase.grid(row = 4, column = 3, sticky = W)
 
         # (5) check button vowels after phrase
         self.vowels_after = BooleanVar()
@@ -67,21 +74,22 @@ class Application(Frame):
                     variable = self.vowels_after
                     ).grid(row = 5, column = 1, sticky = W, padx = 5)
         self.vowels = Entry(self, width = 4)
-        self.vowels.grid(row = 5, column = 2, sticky = W)
+        self.vowels.grid(row = 5, column = 3, sticky = W)
 
+        # (8) select dictionary
         self.optionmenu_value = StringVar(self)
         self.optionmenu_value.set(self.DICTIONARIES[0])  # default value
         self.optionmenu = OptionMenu(
             self, self.optionmenu_value, *self.DICTIONARIES)
-        self.optionmenu.grid(row=6, column=1, columnspan=2)
+        self.optionmenu.grid(row=8, column=1, columnspan = 3, padx = 5)
 
         # copyright
         Label(self,
               text = "Copyright © " + str(datetime.today().year) + ", Misha Kushka,"
-              ).grid(row = 9, column = 1, columnspan = 2, sticky = S)
+              ).grid(row = 9, column = 1, columnspan = 3)
         Label(self,
               text = "All Rights Reserved"
-              ).grid(row = 10, column = 1, columnspan = 2, sticky = S)
+              ).grid(row = 10, column = 1, columnspan = 3)
 
         # output text area
         self.textarea = Text(self, width = 32, height = 14, wrap = WORD)
@@ -102,10 +110,26 @@ class Application(Frame):
             self.textarea.insert(0.0, error_message)
             return"""
 
+    def add_stress(self):
+        element = self.focus_get()
+        stress = "́"
+
+        if (element == self.search_area):
+            self.search_area.insert(END, stress)
+        elif (element == self.numb_of_syllables):
+            self.numb_of_syllables.insert(END, stress)
+        elif (element == self.in_phrase):
+            self.in_phrase.insert(END, stress)
+        elif (element == self.vowels):
+            self.vowels.insert(END, stress)
+
     def search(self):
         """ Search phrase in the dictionary using options"""
+        # Load dictionary
         index = self.DICTIONARIES.index(self.optionmenu_value.get())
         dictionary = open(self.DICT_FILES[index], "r", encoding = 'utf-8')
+
+        # Is stressed input
         
         # preparation for search
         in_phrase = self.search_area.get()
