@@ -1,10 +1,10 @@
-# -*- mode: python -*-
+# -*- mode: python ; coding: utf-8 -*-
 
 block_cipher = None
 
 
-a = Analysis(['E:\\Python\\GUI\\Dictionary'],
-             pathex=['E:\\Python\\GUI\\Dictionary'],
+a = Analysis(['dictionary.py'],
+             pathex=['Z:\\Documents\\Programming\\Python\\Dictionary'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -13,7 +13,8 @@ a = Analysis(['E:\\Python\\GUI\\Dictionary'],
              excludes=[],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
-             cipher=block_cipher)
+             cipher=block_cipher,
+             noarchive=False)
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
@@ -21,8 +22,12 @@ exe = EXE(pyz,
           a.binaries,
           a.zipfiles,
           a.datas,
-          name='Dictionary',
+          [],
+          name='dictionary',
           debug=False,
+          bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          console=False )
+          upx_exclude=[],
+          runtime_tmpdir=None,
+          console=True )
