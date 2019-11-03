@@ -10,8 +10,8 @@ executables = [cx_Freeze.Executable("dictionary.py", base=base, icon="vocabulary
 
 cx_Freeze.setup(
     name = "Dictionary",
-    options = {"build_exe": {"packages":["tkinter","datetime"], "include_files":["vocabulary.ico"]}},
-    version = "1.0.0",
+    options = {"build_exe": {"packages":["tkinter","datetime"], "include_files":["vocabulary.ico", "data/"]}},
+    version = "2.0.0",
     description = "Ukrainian and russian dictionary",
     executables = executables
     )
